@@ -13,10 +13,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
   config.vm.define :database do |database|
+    # config.vm.network "forwarded_port", guest: 3306, host: 3306
+    database.vm.network "private_network", ip: "192.168.33.10"
     database.vm.hostname = "database"
-    database.vm.network :private_network, ip: "33.33.33.10"
     database.vm.provision :shell do |shell|
       shell.inline = "mkdir -p /etc/puppet/modules;
+                      puppet module install --force puppetlabs/stdlib;
                       puppet module install --force puppetlabs-mysql"
     end
     database.vm.provision :puppet do |puppet|

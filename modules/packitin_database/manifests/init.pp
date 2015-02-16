@@ -1,6 +1,7 @@
 
 class packitin_database {
   class { '::mysql::server':
+    override_options => { 'mysqld' => { 'bind_address' => '0.0.0.0' } },
     databases => {
       'packitin' => {
         ensure => 'present',
@@ -8,7 +9,7 @@ class packitin_database {
       }
     },
     users => {
-      'packitin@localhost' => {
+      'packitin@192.168.33.1' => {
         ensure => 'present',
         max_connections_per_hour => '0',
         max_queries_per_hour => '0',
@@ -18,12 +19,12 @@ class packitin_database {
       },
     },
     grants => {
-      "packitin@localhost/packitin.*" => {
+      "packitin@192.168.33.1/packitin.*" => {
         ensure => 'present',
         options => ['GRANT'],
         privileges => ['ALL'],
         table => 'packitin.*',
-        user => 'packitin@localhost',
+        user => 'packitin@192.168.33.1',
       }
     }
   }
